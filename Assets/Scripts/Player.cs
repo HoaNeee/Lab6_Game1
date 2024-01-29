@@ -13,18 +13,27 @@ public class Player : MonoBehaviour
 
     Rigidbody2D rigidbody2D;
 
-    public int cherry = 0;
+    public int cherry ;
     public TextMeshProUGUI cherryText;
+
+    public AudioClip jump;
+    public AudioClip collectItem;
+    private AudioSource audioSource;
+
+    public GameObject effectPartical;
 
     void Start()
     {
         rigidbody2D = GetComponent<Rigidbody2D>();
+        audioSource = GetComponent<AudioSource>();
         
+        Instantiate(effectPartical, gameObject.transform);
     }
 
     public void Jump ()
     {
         Debug.Log("Vao ham Jump");
+        audioSource.PlayOneShot(jump);
         rigidbody2D.AddForce(Vector2.up * 6, ForceMode2D.Impulse);
 
         
@@ -57,10 +66,11 @@ public class Player : MonoBehaviour
     {
         if(collision.CompareTag("item"))
         {
+            audioSource.PlayOneShot(collectItem);
             cherry++;
             cherryText.SetText(cherry.ToString());
             Destroy(collision.gameObject);
-
+            
             if(cherry >= 6)
             {
                 panelWinGame.SetActive(true);
